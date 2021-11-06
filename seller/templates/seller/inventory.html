@@ -1,0 +1,101 @@
+{%extends 'seller/base.html'%}
+{%block content%}
+{%load static%}
+<main>
+
+    <div class="message-wrapper">
+        {%for message in messages%}
+        <div class="messageGreen">
+            <span>{{message}}</span>
+        </div>
+        {%endfor%}
+    </div>
+
+    <div id="searchandadd">
+        <div class="search-wrapper">
+            <span class="las la-search"></span>
+            <input id="searchcontent" placeholder="Search here (Product name)" autocomplete="off">
+            <br>
+            <!-- To show list result -->
+            <div id="searchlist">
+            </div>
+        </div>
+        <!-- Button to add item -->
+        <a href="{% url 'seller:createproduct' %}"><button>Add Item+</button></a>
+    </div>
+
+    <script src="/static/js/inventory.js"></script>    
+
+    <table class="content-table">
+        <thead>
+            <th>Product ID</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>XS</th>
+            <th>S</th>
+            <th>M</th>
+            <th>L</th>
+            <th>XL</th>
+            <th>XXL</th>
+            <th>XXXL</th>
+            <th></th>
+        </thead>
+        <tbody>
+            {% for i in products%}
+            <tr class="productlist">
+                <td>{{i.id}}</td>
+                <td>{{i.label}}</td>
+                <td>{{i.category}}</td>
+                <td>{{i.description}}</td>
+                <td>{{i.XS}}</td>
+                <td>{{i.S}}</td>
+                <td>{{i.M}}</td>
+                <td>{{i.L}}</td>
+                <td>{{i.XL}}</td>
+                <td>{{i.XXL}}</td>
+                <td>{{i.XXXL}}</td>
+                <td class="tablebuttons">
+                    <div>
+                        <a href="{% url 'seller:editproduct' i.id %}"><button>Edit</button></a>
+                    </div>
+                    <div>
+                        <button class="delete" pid={{i.id}}>Delete</button>
+                    </div>
+                </td>
+            </tr>
+            {%endfor%}
+
+
+        </tbody>
+    </table>
+
+</main>
+
+<script>
+    // To remove a product when clicked on delete button, we use delegated event because the searchresults will also have delete buttons
+    $("body").on("click",".delete",function(){
+        var id = $(this).attr("pid");
+        mythis = this;
+        $.ajax({
+            method: "POST",
+            url: "{% url 'seller:deleteproduct' %}",
+            data: {
+                pid: id,
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: function (data) {
+                if (data.status == 1) {
+                    console.log("Deleted");
+                    $(mythis).closest("tr").fadeOut();
+                }
+            }
+        })
+    });
+
+    $("a").removeClass("active");
+    $("#inventory").addClass("active");
+    $("#page").text("Inventory");
+</script>
+
+{%endblock%}

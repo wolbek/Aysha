@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300&display=swap');
+
+
+#savedaddress{
+    background: #f6f5f7;
+    font-family: 'Poppins',sans-serif; 
+    zoom:100%;
+    min-height: 100%;
+}
+
+#savedaddress #address-wrapper{
+display: flex;
+flex-direction: row;
+margin:0 100px;
+align-items: center;
+align-content: center;
+flex-wrap: wrap;
+justify-content: space-around;
+
+/* justify-content: space-evenly;
+display: inline-flex;
+flex-wrap: wrap;
+gap: 12px; */
+}
+
+#savedaddress h1{
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin: 30px;
+    opacity: 0.9;
+}
+
+#savedaddress #address-wrapper .address{
+    border-radius:20px;
+    margin:20px 0px;
+    padding: 20px;
+    min-width: 400px;
+    max-width: 400px;
+    min-height: 300px;
+    box-shadow:0 0 20px rgba(0,0,0,0.15);
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+/* #addaddress {
+    border-radius:20px;
+    border:none;
+    min-width: 340px;
+    min-height: 240px;
+    box-shadow:0 0 20px rgba(0,0,0,0.15);
+    background: rgb(212, 212, 212);
+    color:grey;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    justify-content: space-around;
+} */
+
+#savedaddress #addaddressbutton{
+    border-radius: 20px;
+    width: 100%;
+    border: 1px solid #2b75ff;
+    background: #2b75ff;
+    color:#fff;
+    font-size: 12px;
+    font-weight: bold;
+    padding:12px 30px;
+    letter-spacing:1px;
+    /* text-transform: uppercase; */
+    margin-bottom: 20px;
+    /* margin-left:auto;
+    margin-right:auto; */
+}
+
+#savedaddress .address button{
+    border-radius: 20px;
+    border: 1px solid #2b75ff;
+    background: #2b75ff;
+    color:#fff;
+    font-size: 12px;
+    font-weight: bold;
+    padding:12px 30px;
+    letter-spacing:1px;
+    /* text-transform: uppercase; */
+    margin-bottom: 5px;
+    width: 100%;
+}
+#savedaddress .delete{
+    width:100px;
+}
+#addaddressbuttonform{
+    width: 150px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}

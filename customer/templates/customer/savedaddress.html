@@ -1,0 +1,59 @@
+{%extends 'customer/base.html'%}
+{%block content%}
+{%load static%}
+<link rel="stylesheet" href="/static/css/savedaddress.css">
+<main id="savedaddress">
+
+    <div class="message-wrapper">
+        {%for message in messages%}
+        <div class="messageGreen">
+            <span>{{message}}</span>
+        </div>
+        {%endfor%}
+    </div>
+
+    <h1>Saved Address</h1>
+    
+    <form action="{% url 'customer:addaddress' %}" method="GET" id="addaddressbuttonform">
+        <button id="addaddressbutton" type="submit">Add address</button>
+        <input type="hidden" name="frompage" value="savedaddress">
+    </form>
+    <div id="address-wrapper">
+        {% for i in customeraddresses%}
+        <div class="address">
+            <h4>Address {{forloop.counter}}</h4>
+            <h2>{{i.firstname}} {{i.lastname}}</h2>
+            <p>{{i.address}}</p>
+            <span class="delete" aid={{i.id}}><button>Delete</button></span>
+        </div>            
+        {% endfor %}
+    </div>
+</main>
+
+<script>
+$(".delete").click(function(){
+    aid=$(this).attr("aid");
+    mythis=this;
+    $.ajax({
+        method:"POST",
+        url:"{% url 'customer:deleteaddress' %}",
+        data:{
+            aid:aid,
+            csrfmiddlewaretoken:$("input[name=csrfmiddlewaretoken]").val()
+        },
+        success:function(data){
+            if(data.status==1){
+                $(mythis).closest(".address").fadeOut(function(){
+                    $(".message-wrapper").remove()
+                $("main").prepend($("<div>").append($("<div>").append($("<span>").html("Address Deleted Successfully")).addClass("messageGreen")).addClass("message-wrapper"))
+                });
+                
+            }
+        }
+    })
+})
+
+$("a").removeClass("active");
+$("#customermenu").addClass("active");
+</script>
+{%endblock%}

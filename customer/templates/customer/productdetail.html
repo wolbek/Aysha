@@ -1,0 +1,176 @@
+{%extends 'customer/base.html'%}
+{%block content%}
+{%load static%}
+
+<link rel="stylesheet" href="/static/css/productdetail.css">
+
+<main id="productdetail">
+
+    <div class="small-container">
+        <div class="row">
+            <div class="imagebox">
+                <img src="{{product.image.url}}" width="30%">
+            </div>
+            <div class="textbox">
+                <h1>{{product.label}}</h1>
+                <div><b>Category: </b>Hoodies Male</div>
+
+
+                <div id="productdetailbutton">
+                    {% if user.is_authenticated %}
+                    <input type="hidden" id="userauthenticated" value="True">
+
+                    <form method="POST" action="{% url 'customer:addtocart' product.id %}" id="addbutton">
+                        {%csrf_token%}
+                        <button type="submit">Add to Cart</button>
+                        <input type="hidden" name="productsize" value="" class="productsize">
+                    </form>
+
+                    <div id="gobutton"><a href="{% url 'customer:cart' %}"><button type="submit">Go to Cart</button></a></div>
+
+                    <form action="{% url 'customer:singleordersummary' product.id %}" method="POST" id="buynowbutton">
+                        {%csrf_token%}
+                        <button type="submit">Buy Now</button>
+                        <!-- To store product size which gets shown in ordersummary -->
+                        <input type="hidden" name="productsize" value="" class="productsize">
+                    </form>
+
+                    {% else %}
+
+                    <div>
+                        <input type="hidden" id="userauthenticated" value="False">                        
+                        <a href="{% url 'customer:logincustomer' %}" id="addbutton"><button type="submit">Add to Cart</button></a>                   
+                        <a href="{% url 'customer:logincustomer' %}" id="buynowbutton"><button type="submit">Buy Now</button></a>
+
+
+                    </div>
+
+                    {% endif %}
+                </div>
+                <div><b>Seller:</b> {{sellershopname}}</div>
+
+                <div id="instockornot" pid={{product.id}}></div>
+                <div id="selected-size-price">₹{{product.Mprice | floatformat:2}}</div>
+                <div><b>Size:</b>
+                    <select required id="size-selection" name="size-selected">
+                        <option value="XS">XS</option>
+                        <option value="S">S</option>
+                        <option value="M" selected>M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                        <option value="XXXL">XXXL</option>
+                    </select>
+                </div>
+                <div><b>Description:</b></div>
+                <div>{{product.description}}</div>
+
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+
+    function instock() {
+        $.ajax({
+            method: "GET",
+            url: "{% url 'customer:instock' %}",
+            data: {
+                pid: "{{product.id}}",
+                size: $("#size-selection").find(":selected").val()
+            },
+            success: function (data) {
+
+                if (data.available == "IN STOCK") {
+                    $("#instockornot").text(data.available).css("color", "green");
+                    $("#addbutton").attr("disabled", false).css({"opacity":"1","pointer-events": "auto"});
+                    $("#buynowbutton").attr("disabled", false).css({"opacity":"1","pointer-events": "auto"});
+                }
+                else if (data.available == "OUT OF STOCK") {
+                    $("#instockornot").text(data.available).css("color", "red");
+                    $("#addbutton").attr("disabled", true).css({"opacity":"0.4","pointer-events": "none"});
+                    $("#buynowbutton").attr("disabled", true).css({"opacity":"0.4","pointer-events": "none"});
+                }
+                else {
+                    $("#instockornot").text(data.available).css("color", "red");
+                    $("#addbutton").attr("disabled", false).css({"opacity":"1","pointer-events": "auto"});
+                    $("#buynowbutton").attr("disabled", false).css({"opacity":"1","pointer-events": "auto"});
+                }
+                $(".productsize").val($("#size-selection").find(":selected").val())
+
+            }
+        })
+    }
+
+    function incart() {
+        $.ajax({
+            method: "GET",
+            url: "{% url 'customer:incart' %}",
+            data: {
+                pid: "{{product.id}}",
+                size: $("#size-selection").find(":selected").val()
+            },
+            success: function (data) {
+                if (data.incart == true) {
+                    $("#addbutton").css("display","none");
+                    $("#gobutton").css("display","block");
+                }       
+                else{
+                    $("#addbutton").css("display","block");
+                    $("#gobutton").css("display","none");
+                }       
+            }
+        })
+    }
+    
+    if ($("#userauthenticated").val() == "True") {
+        incart();
+        instock();
+    }
+    else {
+        instock();
+    }
+
+
+
+
+
+    $("#size-selection").change(function () {
+        var selectedOption = $(this).find(":selected").val();
+        if (selectedOption == "XS") {
+            $("#selected-size-price").text("₹{{product.XSprice | floatformat:2}}");
+        }
+        else if (selectedOption == "S") {
+            $("#selected-size-price").text("₹{{product.Sprice | floatformat:2}}");
+        }
+        else if (selectedOption == "M") {
+            $("#selected-size-price").text("₹{{product.Mprice | floatformat:2}}");
+        }
+        else if (selectedOption == "L") {
+            $("#selected-size-price").text("₹{{product.Lprice | floatformat:2}}");
+        }
+        else if (selectedOption == "XL") {
+            $("#selected-size-price").text("₹{{product.XLprice | floatformat:2}}");
+        }
+        else if (selectedOption == "XXL") {
+            $("#selected-size-price").text("₹{{product.XXLprice | floatformat:2}}");
+        }
+        else if (selectedOption == "XXXL") {
+            $("#selected-size-price").text("₹{{product.XXXLprice | floatformat:2}}");
+        }
+
+        if ($("#userauthenticated").val() == "True") {
+            incart();
+            instock();
+        }
+        else {
+            instock();
+        }
+
+
+    })
+</script>
+
+{%endblock%}

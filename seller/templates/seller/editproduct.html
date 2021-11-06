@@ -1,0 +1,137 @@
+{%extends 'seller/base.html'%}
+{%block content%}
+{%load static%}
+<main>
+    <form id="addform" action="{% url 'seller:editproduct' product.id%}" method="POST" enctype='multipart/form-data'
+        autocomplete="off">
+        {% csrf_token %}
+        <div id="imageSection">
+            <div id="image-preview">
+                <img src="{{product.image.url}}" id="image-preview-image1">
+                <span id="image-preview-text1">Image Preview</span>
+            </div>
+            <label class="custom-file-upload">
+                Choose file
+                <div id="djangoimageupload">
+                    {{form.image}}
+                </div>
+            </label>
+        </div>
+        <div id="descriptionSection">
+            <div id="descriptionSectionContent">
+                <div id="descriptionTextPart">
+                    <div id="box">
+                        <div style="margin-right: 10px;">
+                            Label
+                            <br>
+                            <!-- <input type="text"> -->
+                            {{form.label}}
+                        </div>
+                        <div style="margin-left:10px;">
+                            Category
+                            <br>
+                            <!-- <div class="custom-select">
+                                        <select>
+                                            <option disabled selected> -- select an option -- </option>
+                                            <option>Hoodie-male</option>
+                                            <option>Hoodie-female</option>
+                                        </select>                              
+                                           
+                                    </div> -->
+                            {{form.category}}
+
+                        </div>
+                    </div>
+                    <div id="description">
+                        Description
+                        <br>
+                        <!-- <textarea></textarea> -->
+                        {{form.description}}
+                    </div>
+                </div>
+
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Size</th>
+                            <th>Quantity</th>
+                            <th>Price (in ₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>XS</td>
+                            <td>{{form.XS}}</td>
+                            <td>{{form.XSprice}}</td>
+                        </tr>
+                        <tr>
+                            <td>S</td>
+                            <td>{{form.S}}</td>
+                            <td>{{form.Sprice}}</td>
+                        </tr>
+                        <tr>
+                            <td>M</td>
+                            <td>{{form.M}}</td>
+                            <td>{{form.Mprice}}</td>
+                        </tr>
+                        <tr>
+                            <td>L</td>
+                            <td>{{form.L}}</td>
+                            <td>{{form.Lprice}}</td>
+                        </tr>
+                        <tr>
+                            <td>XL</td>
+                            <td>{{form.XL}}</td>
+                            <td>{{form.XLprice}}</td>
+                        </tr>
+                        <tr>
+                            <td>XXL</td>
+                            <td>{{form.XXL}}</td>
+                            <td>{{form.XXLprice}}</td>
+                        </tr>
+                        <tr>
+                            <td>XXXL</td>
+                            <td>{{form.XXXL}}</td>
+                            <td>{{form.XXXLprice}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="submit">Submit</button>
+
+            </div>
+
+
+        </div>
+    </form>
+</main>
+
+
+
+<script>
+
+    $("#id_image").change(function (event) {
+        const [file] = id_image.files;
+        if (file) {
+            $("#image-preview-image1").css({
+                "display": "block",
+
+                "max-width": "100%",
+                "max-height": "100%",
+            });
+            $("#image-preview-image1").attr("src", URL.createObjectURL(file));
+            $("#image-preview-text1").css("display", "none");
+        }
+        else {
+            $("#image-preview-image1").attr("src", "");
+            $("#image-preview-image1").css("display", "none");
+            $("#image-preview-text1").css("display", "block");
+        }
+    })
+
+    $("a").removeClass("active");
+    $("#inventory").addClass("active");
+    $("#page").text("Edit Item");
+
+</script>
+
+{%endblock%}

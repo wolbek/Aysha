@@ -1,0 +1,71 @@
+{%extends 'customer/base.html'%}
+{%block content%}
+{%load static%}
+<link rel="stylesheet" href="/static/css/paymentsuccess.css">
+<main id="paymentsuccess">
+    <h1>✓ Order Placed, Thank You!</h1>
+    <a href="{% url 'customer:orderhistory' %}"><div id="orders-history"> Go to Orders History Page</div></a>
+    <div id="container">
+
+
+        <div id="order-wrapper">
+            <div id="top-section">
+                {% if singleitem%}
+                <div class="product">
+                    <div class="image-box">
+                        <img src="{{product.image.url}}">
+                    </div>
+                    <div class="description-box">
+
+                        <h2>{{product.label}}</h2>
+                        <div class="description-box-content">
+                            <div>Size: {{productsize}}</div>
+                            <div>Price: ₹{{productprice | floatformat:2}}</div>
+                            <div>Quantity: 1</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                {% else %}
+
+                {% for i in cartitems %}
+                <div class="product">
+                    <div class="image-box">
+                        <img src="{{i.product.image.url}}">
+                    </div>
+                    <div class="description-box">
+
+                        <h2>{{i.product.label}}</h2>
+                        <div class="description-box-content">
+                            <div>Size: {{i.product_size}}</div>
+                            <div>Price: ₹{{i.price | floatformat:2}}</div>
+                            <div>Quantity: {{i.save_quantity}}</div>
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+            </div>
+
+            <div id="bottom-section">
+                <div id="order-price">
+                    <div><span style="font-size: 20px;font-weight: 900;">Shipping Price:</span></div>
+                    <div>₹100.00</div>
+                    <div><span style="font-size: 20px;font-weight: 900;">Total Paid:</span></div>
+                    <div>₹{{totalpaid | floatformat:2}}</div>
+                </div>
+                <div id="address-wrapper">
+                    <div><span style="font-size: 20px;font-weight: 900;">Address:</span></div>
+                    <div>{{orderfirstname}} {{orderlastname}}</div>
+                    <div>{{orderaddress}}</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+{%endblock%}

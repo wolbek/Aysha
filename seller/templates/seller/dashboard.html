@@ -1,0 +1,126 @@
+{%extends 'seller/base.html'%}
+{%block content%}
+<main id="main">
+    <div class="cards">
+        <div class="card-single">
+            <div>
+                <h1>{{productcount}}</h1>
+                <span>Items</span>
+            </div>
+            <div>
+                <span class="las la-clipboard"></span>
+            </div>
+        </div>
+        <div class="card-single">
+            <div>
+                <h1>{{orderpendingcount}}</h1>
+                <span>Orders Pending</span>
+            </div>
+            <div>
+                <span class="las la-shopping-bag"></span>
+            </div>
+        </div>
+        <div class="card-single">
+            <div>
+                <h1>{{ordercompletedcount}}</h1>
+                <span>Orders Completed</span>
+            </div>
+            <div>
+                <span class="las la-check-circle"></span>
+            </div>
+        </div>
+        <div class="card-single">
+            <div>
+                <h1>₹{{totalprice}}</h1>
+                <span>Income</span>
+            </div>
+            <div>
+                <span class="lab la-google-wallet"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="recent-grid">
+        <div class="projects">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Recent Items</h3>
+                    <a href="{%url 'seller:inventory'%}"><button>See all<span class="las la-arrow-right"></span></button></a>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table width="100%">
+                            <thead>
+                                <tr>
+                                    <td>Product</td>
+                                    <td>Category</td>
+                                    <td>XS</td>
+                                    <td>S</td>
+                                    <td>M</td>
+                                    <td>L</td>
+                                    <td>XL</td>
+                                    <td>XXL</td>
+                                    <td>XXXL</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in products%}
+                                <tr>
+                                    <td>{{i.label}}</td>
+                                    <td>{{i.category}}</td>
+                                    <td>{{i.XS}}</td>
+                                    <td>{{i.S}}</td>
+                                    <td>{{i.M}}</td>
+                                    <td>{{i.L}}</td>
+                                    <td>{{i.XL}}</td>
+                                    <td>{{i.XXL}}</td>
+                                    <td>{{i.XXXL}}</td>
+                                </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="customers">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Latest Pending Orders</h3>
+                    <a href="{%url 'seller:orderpending'%}"><button>See all<span class="las la-arrow-right"></span></button></a>
+                </div>
+
+                <div class="card-body">
+                    {% for i in orderpending%}
+                    <div class="customer">
+                        <div class="info">
+                            <span class="las la-user" id="user"></span>
+                            <div>
+                                <h4>{{i.customer_firstname}} {{i.customer_lastname}}</h4>
+                                <small>Status: {{i.delivery_status}}</small>
+                            </div>
+                        </div>
+                        <div class="price">
+                            ₹ {{i.price}}
+                        </div>
+                    </div>
+                    {%endfor%}  
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    $("a").removeClass("active");
+    $("#dashboard").addClass("active");
+    $("#page").text("Dashboard");
+</script>
+
+{%endblock%}

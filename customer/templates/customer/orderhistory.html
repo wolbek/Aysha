@@ -1,0 +1,56 @@
+{%extends 'customer/base.html'%}
+{%block content%}
+{%load static%}
+<link rel="stylesheet" href="/static/css/orderhistory.css">
+<main id="orderhistory">
+    <h1>Order History</h1>
+    <div id="container">
+        <div id="order-wrapper">
+            <div >
+
+                {% for i in orders %}
+
+                <div class="product">
+                    
+                        <div class="image-box">
+                            <a href="{% url 'customer:productdetail' i.product.id %}">
+                            <img src="{{i.product.image.url}}">
+                        </a>
+                        </div>
+                    <div class="description-box">
+                        <a href="{% url 'customer:productdetail' i.product.id %}">
+                            <h2>{{i.product.label}}</h2>
+                        </a>
+
+                        <div class="description-box-content">
+                            <div>Size:{{i.product_size}}</div>
+                            <div>Price:{{i.price}}</div>
+                            <div>Shipping Price: ₹100.00</div>
+                            <div>Quantity: {{i.buy_quantity}}</div>
+                            <div>Status: {{i.delivery_status}}</div>
+                            <div>Order Date: {{i.order_date | date:'d/m/Y'}}</div>
+                            {% if i.delivered_date %}
+                            <div>Delivered Date: {{i.delivered_date | date:'d/m/Y'}}</div>
+                            {% else %}
+                            <div>Delivery Date: {{i.delivery_date | date:'d/m/Y'}}</div>
+                            {% endif %}
+                            <div>Address:</div>
+                            <div>{{i.customer_firstname}} {{i.customer_lastname}}</div>
+                            <div>{{i.to_address}}</div>
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<script>
+    $("a").removeClass("active");
+    $("#customermenu").addClass("active");
+</script>
+
+{%endblock%}

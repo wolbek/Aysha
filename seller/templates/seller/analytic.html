@@ -1,0 +1,143 @@
+{%extends 'seller/base.html'%}
+{%block content%}
+{%load static%}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<main>
+    <div id="graph">
+        <div id="salesgraph">
+            <h3>Product Sales Graph</h3>
+            <div id="selectgroup">
+                <select id="productoption">
+                    {% for i in products %}
+                    <option pid={{i.id}}>{{i.label}}</option>
+                    {% endfor %}
+                    <option pid="all">All</option>
+                </select>
+                <select id="timeoption">
+                    <option>Last 7 days</option>
+                    <option>Last 28 days</option>
+                    <option>Last 90 days</option>
+                </select>
+            </div>
+
+            <div id="linechartcontainer" style="height:100% !important; width:100% !important">
+                <canvas id="myChart2"></canvas>
+                <br>
+                <p id="totalrevenue"></p>
+            </div>
+        </div>
+        <div id="gendergraph">
+            <h3>Gender Ratio</h3>
+
+            <div id="piechartcontainer" style="height:100% !important; width:100% !important">               
+                <canvas id="myChart1"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+</main>
+
+<script>
+    // To show gender chart when anayltic.html is opened
+    labels = [];
+    items = [];
+    $.ajax({
+        url: "{%url 'seller:genderchart'%}",
+        method: 'GET',
+
+        success: function (data) {
+            labels = data.labels
+            items = data.items
+            var ctx = document.getElementById('myChart1').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Gender ratio',
+                        data: items,
+                        backgroundColor: [
+                            '#00a2ff',
+                            '#ff005d',
+
+                        ],
+                    }]
+
+                }
+            })
+        }
+    })
+
+    // To show sales chart when anayltic.html is opened
+
+    var selectedProduct = $("#productoption").find(":selected").attr("pid");
+    var selectedTime = $("#timeoption").find(":selected").text();
+    var myChart;
+    $.ajax({
+        url: "{% url 'seller:productdata' %}",
+        method: 'GET',
+        data: {
+            productoption: selectedProduct,
+            timeoption: selectedTime
+        },
+        success: function (data) {
+            labels = data.labels
+            items = data.items
+            $("#totalrevenue").text("Total Sales: "+data.total)
+            var ctx = document.getElementById('myChart2').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Products sold',
+                        data: items,
+                        borderColor: '#1aafeb',                        
+                    }],                  
+
+                }
+                
+            })
+        }
+    })
+    // To show sales chart when selected product or selected option is changed
+
+    $("#productoption,#timeoption").change(function () {
+        var selectedProduct = $("#productoption").find(":selected").attr("pid");
+        var selectedTime = $("#timeoption").find(":selected").text();
+        $.ajax({
+            url: "{% url 'seller:productdata' %}",
+            method: 'GET',
+            data: {
+                productoption: selectedProduct,
+                timeoption: selectedTime
+            },
+            success: function (data) {
+                myChart.destroy();
+                labels = data.labels
+                items = data.items
+                $("#totalrevenue").text("Total Sales: "+data.total)
+                var ctx = document.getElementById('myChart2').getContext('2d');
+                myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Products sold',
+                            data: items,
+                            borderColor: '#1aafeb',
+                        }]
+
+                    }
+                })
+            }
+        })
+    })
+
+    $("a").removeClass("active");
+    $("#analytic").addClass("active");
+    $("#page").text("Analytics");
+</script>
+
+{%endblock%}

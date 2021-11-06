@@ -1,0 +1,514 @@
+/* Navbar */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&display=swap');
+
+*{
+    padding:0;
+    margin:0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+html { zoom: 80%; }
+
+body{
+    font-family: "Montserrat",sans-serif;
+}
+
+nav{
+    position:fixed;
+    display: flex;
+    justify-content: space-between;
+    align-items:center ;
+    background: #24252A;
+    height:80px;
+    width:100%;
+    z-index: 999;
+}
+
+
+label.logo{
+    color: white;
+    font-size: 30px;
+    line-height: 80px;
+    padding:0 100px;
+    font-weight: bold;
+}
+
+
+nav ul li{
+    display:inline-block;
+    line-height:80px;
+    /* margin:0 5px; */
+}
+
+nav ul li a{
+    color: white;
+    font-size: 17px;
+    padding: 7px 13px;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+
+ul a.active, ul a:hover{
+    background:#1b9bff;
+    transition: .5s;
+}
+
+.checkbtn{
+    font-size:30px;
+    color:white;
+    float:right;
+    line-height: 80px;
+    margin-right:40px;
+    margin-left: 20px;
+    cursor:pointer;
+    display: none;
+}
+
+#check{
+    display:none;
+}
+
+.search-wrapper{         
+    width: 400px;
+    height:40px;       
+}
+
+.search-wrapper form button{
+    padding:13.5px 1rem;
+    color: white;
+    background-color: rgba(0,136,169,1);
+    border:none;
+   
+}
+
+.search-wrapper form button:hover{
+    background-color: rgba(0,136,169,0.8);
+}
+
+.search-wrapper input {
+    height:100%;
+    width: 80%;
+    padding: .5rem;
+    border:none;
+    outline:none;
+}
+
+ul li i{
+    margin-left: 10px;
+}
+
+/* Drop down: Men items, Women items, User options */
+#men,#women, #user,#login,#signup{
+    position: relative;
+    z-index:999;
+}
+
+#menitems,#womenitems, #useroptions,#loginoptions,#signupoptions{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    color:white;
+    top:200%;
+    left:15%;
+    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    background-color: #ffffff;
+    min-width: 300px;
+    max-width: 300px; 
+     
+    
+}
+
+#menitems li, #womenitems li, #useroptions li,#loginoptions li,#signupoptions li{
+    color:black;
+    /* margin-left:0;  
+    margin-right: 0; */
+    padding:0px 10px ;
+   
+}
+
+#useroptions li button{
+    border:none;
+    color:black;
+    /* margin-left:0;  
+    margin-right: 0; */
+    padding:0px 100% 0px 0px ;
+    background-color: #ffffff;
+    width:100%;
+    font-size:16px ;
+    font-family: "Montserrat",sans-serif ;
+}
+
+#useroptions li button:hover{
+    background-color: #f3f2f2;
+
+}
+
+#menitems li:hover,#womenitems li:hover, #useroptions li:hover,#loginoptions li:hover,#signupoptions li:hover{
+    background-color: #f3f2f2;    
+}
+
+
+/* To remove background-color change on hovering in menu 'list' of navbar */
+#menitems a:hover, #womenitems a:hover, #useroptions a:hover,#loginoptions a:hover,#signupoptions a:hover{
+    background-color: #f3f2f2;
+    transition: none;
+}
+
+nav ul li,
+#useroptions li button{
+    line-height: 80px;
+}
+
+
+/* 
+section{
+    background: url(bg1.jpg) no-repeat;
+    background-size:cover;
+    height:calc(100vh - 80px);
+} */
+
+/* Carousel */
+
+#carousel-wrapper{
+    margin-left: auto;
+    margin-right: auto;
+    width:70%;
+}
+
+.owl-prev span{
+    font-size: 30px;
+    border-radius: 50px;
+    padding: 1rem 1.5rem;
+}
+
+.owl-next span{
+    font-size: 30px;
+    border-radius: 50px;
+    padding: 1rem 1.5rem;
+}
+
+.item div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin:10px;
+}
+
+.item{
+    border:1px solid rgb(221, 221, 221);
+ 
+}
+
+/* Banner */
+.banner{
+    max-width: 100%;
+    max-height:100%;
+    /* transform: scaleX(-1); */
+    background-color: lightcyan;
+   
+}
+
+.banner img{
+    max-width: 100%;
+    max-height: 100%;
+    padding-top: 10%;
+    padding-left: 42%;
+}
+
+main{
+    padding-top:80px;
+}
+
+/* Messages */
+
+.message-wrapper{
+    position: relative;   
+    
+}
+
+.messageGreen{
+    height:70px;
+    width: 60%;
+    color:#0f5132;
+    background-color: #d1e7dd;
+    padding:1rem 1rem;
+    border:1px solid #badbcc;
+    border-radius: .25rem;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;  
+    margin-top: 30px;  
+    margin-bottom: 30px;   
+}
+
+/* .messageRed{
+    height:70px;
+    width: 60%;
+    color:#842029;
+    background-color: #f8d7da;
+    padding:1rem 1rem;
+    border:1px solid #f5c2c7;
+    border-radius: .25rem;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;  
+    margin-bottom: 30px;
+} */
+
+/* Search result */
+
+#searchlist{   
+    
+    /* border: 5px solid #1D2231;  */
+    /* border-radius:10px; */
+    /* box-shadow: 0 0 20px rgba(0,0,0,0.15); */
+    box-shadow: 0 10px 10px -10px #000000;
+    background-color: #ffffff;
+    min-width: 300px;
+    max-width: 300px;   
+    display:table;
+    align-items:center; 
+    margin-right:auto;
+    margin-left: auto; 
+    position: absolute;
+    top:100%;
+}
+
+.list-items{
+    font-family: Arial, Helvetica, sans-serif;
+    padding-left:20px;
+    padding-right:20px;
+    height:60px; 
+    width:100%;
+    display:flex;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.list-items:hover{
+    background-color: #f3f2f2;
+}
+
+/* #about{
+    margin-top: 20px;
+    background-color: #2c3e50;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;  
+    background: -webkit-linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("/media/clothing_store/others/banner_2.jpg");
+	background-size: cover;
+} */
+
+
+@media (max-width:1048px){
+    .checkbtn{
+        display: block;
+    }
+
+    ul{
+        position: fixed;
+        width:100%;
+        /* height:100%; */
+        height:113vh;
+        background: #2c3e50;
+        top:80px;
+        left:-100%;
+        text-align:center;
+        transition: all .5s;
+    }
+
+    nav ul li{
+        display: block;
+        margin:50px 0;
+        /* line-height: 30px; */
+    }
+    /* Set size between dropdown */
+    nav ul li,
+    #useroptions li button{
+        line-height: 0px;
+    }
+
+    nav ul li a{
+        font-size: 20px;
+    }   
+
+    #check:checked ~ ul{
+        left:0;
+    }
+
+    .search-wrapper{
+        margin-left: auto;
+        margin-right: auto;
+    }    
+
+    #menitems,#womenitems,#useroptions,#loginoptions,#signupoptions{      
+        
+        color:white;
+        left:-150px;
+        top:50px;
+        box-shadow: 0 10px 10px -10px #000000;
+        background-color: #ffffff;
+        min-width: 300px;
+        max-width: 300px;   
+        
+    }    
+   
+    
+}
+
+/* Banner Content */
+.banner-content {
+    position: absolute;
+    top: 50%;
+    transform: translate(25%, -50%);
+  }
+  
+  .banner-content span {
+    display: inline-block;
+    font-size: 1.4rem;
+    color: var(--grey);
+    margin-bottom: 1rem;
+  }
+  
+  .banner-content h1 {
+    font-size: 3.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+  
+  .banner-content h3 {
+    font-weight: 400;
+    color: var(--grey);
+    margin-bottom: 2rem;
+  }
+
+/* #main-title{
+    font-size: 25px;
+    margin-top:30px;
+    font-weight: 500;
+    text-align: center;
+} */
+
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    background-color: #d1e1ed;
+    font-family: 'Poppins',sans-serif;
+    font-size: 20px;
+  }
+
+/* Footer */
+#footerbottom{
+    margin-top: 40px;  
+}
+#footerbottom .container{
+    max-width:1170px;
+    margin:auto;
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+#footerbottom .row{
+    display:flex;
+}
+
+#footerbottom  ul{
+    list-style:none;
+}
+
+#footerbottom  .footer{
+    background-color: #24262b;
+    padding:70px 0;
+}
+
+#footerbottom .footer-col{
+    width:25%;
+    padding:0 15px;
+}
+
+#footerbottom .footer-col h4{
+    font-size:18px;
+    color:#ffffff;
+    text-transform:capitalize;
+    margin-bottom:35px;
+    font-weight: 500;
+    position: relative;
+}
+
+#footerbottom .footer-col h4::before{
+    content:'';
+    position: absolute;
+    left:0;
+    bottom:-10px;
+    background-color: #e91e63;
+    height: 2px;
+    box-sizing: border-box;
+    width:50px;
+}
+
+#footerbottom .footer-col ul li:not(:last-child){
+    margin-bottom: 10px;
+}
+
+#footerbottom .footer-col ul li a{
+    font-size: 16px;
+    text-transform: capitalize;
+    color: #ffffff;
+    text-decoration:none;
+    font-weight: 300;
+    color:#bbbbbb;
+    display:block;
+    transition: all 0.3s ease;
+}
+
+#footerbottom .footer-col ul li a:hover{
+    color:#ffffff;
+    padding-left: 8px;
+    background-color: transparent;
+}
+
+#footerbottom .footer-col .social-links a{
+    display:inline-block;
+    height:40px;
+    width:40px;
+    padding: 11px;
+
+    background-color: rgba(255,255,255,0.2);
+    margin:0px 10px 10px 0;
+    text-align:center;
+    line-height: 40px;
+    border-radius: 50%;
+    color:#ffffff;
+    transition: all 0.5s ease;
+}
+
+#footerbottom .footer-col .social-links a:hover{
+    color: #24262b;
+    background-color: #ffffff;
+}
+
+/* Responsive */
+@media(max-width:767px){
+    #footerbottom .footer-col{
+        width:50%;
+        margin-bottom: 30px;
+    }
+}
+
+@media(max-width:574px){
+    #footerbottom .footer-col{
+        width:100%;
+    }
+}
+
+

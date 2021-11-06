@@ -1,0 +1,154 @@
+{%extends 'customer/base.html'%}
+{%block content%}
+{%load static%}
+<!-- Owl carousel css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+    integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
+    integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<main>
+
+    <div>
+        <div class="banner-content">
+            <span>Shopping Made Easy</span>
+            <span>Shop online Style offline</span>
+            <h3>Shopping from comfort of your home</h3>
+        </div>
+
+        <div class="banner">
+            <img src="media/clothing_store/others/banner_1.png">
+        </div>
+    </div>
+
+
+    <!-- <div id="main-title">
+        Allow your style to match your ambition!
+    </div> -->
+
+    <span class="title-container">
+        <div>Top 10 New Men's Clothes</div>
+    </span>
+
+    <div id="carousel-wrapper">
+        <div class="owl-carousel owl-theme">
+            <!-- <div class="item">
+                <img src="media/clothing_store/productimg/1FI22S00Z-K117_GJUlqME.jpg">
+                <div>Fila Sweatshirt</div>
+            </div> -->
+            {% for product in menproducts %}
+            <div class="item">
+                <a href="{% url 'customer:productdetail' product.id %}"><img src="{{product.image.url}}"></a>
+                <div>{{product.label}}</div>
+                <div>₹{{product.Mprice | floatformat:2}}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <span class="title-container">
+        <div>Top 10 New Women's Clothes</div>
+    </span>
+
+    <div id="carousel-wrapper">
+        <div class="owl-carousel owl-theme">
+
+            {% for product in womenproducts %}
+            <div class="item">
+                <a href="{% url 'customer:productdetail' product.id %}"><img src="{{product.image.url}}"></a>
+                <div>{{product.label}}</div>
+                <div>₹{{product.Mprice | floatformat:2}}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- <div id="about">
+
+    </div> -->
+    <div id="footerbottom">
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="footer-col">
+                        <h4>Men's Fashion</h4>
+                        <ul>
+                            <li><a href="{% url 'customer:hoodiemen'%}">Hoodie</a></li>
+                            <li><a href="{% url 'customer:sweatshirtmen'%}">Sweatshirt</a></li>
+                            <li><a href="{% url 'customer:longsleevemen'%}">Longsleeve</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Women's Fashion</h4>
+                        <ul>
+                            <li><a href="{% url 'customer:hoodiewomen'%}">Hoodie</a></li>
+                            <li><a href="{% url 'customer:sweatshirtwomen'%}">Sweatshirt</a></li>
+                            <li><a href="{% url 'customer:longsleevewomen'%}">Longsleeve</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Feature</h4>
+                        <ul>
+                            <li><a href="#">E-commerce</a></li>
+                            <li><a href="#">Secure Payments</a></li>
+                            <li><a href="#">Easy To Search</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Get help</h4>
+                        <ul>
+                            <li><a href="{% url 'customer:contactus' %}">Contact Us</a></li>
+                            <div class="social-links">
+                                <a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
+                                <a href="https://twitter.com/?lang=en"><i class="fab fa-twitter"></i></a>
+                                <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                                <a href="https://www.linkedin.com/home"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </footer>
+    </div>
+
+</main>
+
+<!-- Owl carousel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
+    integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
+<script>
+
+    $('.owl-carousel').owlCarousel({
+        loop: true,
+        margin: 10,
+        nav: true,
+        dots: false,
+        autoplay:true,
+        autoplayTimeout:3000,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 3
+            },
+            1000: {
+                items: 4
+            }
+        }
+    })
+
+    // Make active which is clicked
+    $("a").removeClass("active");
+    $("#home").addClass("active");
+
+
+</script>
+{%endblock%}

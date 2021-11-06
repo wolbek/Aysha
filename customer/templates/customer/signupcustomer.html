@@ -1,0 +1,137 @@
+{%extends 'customer/base.html'%}
+{%block content%}
+{%load static%}
+<link rel="stylesheet" href="/static/css/signupcustomer.css">
+
+<main id="signupcustomer">
+    <div class="container" id="container">
+        <div class="form-container sign-in-container">
+            <form id="form" method="POST" >
+                {%csrf_token%}
+                <h1>Sign up</h1>
+                <div id="gender">
+                    <div style="margin-right:50px;">
+                        <input type="radio" value="M" name="gender" id="male" checked="checked" required >Male
+                    </div>
+                    <div>
+                        <input type="radio" value="F" name="gender" id="female">Female
+                    </div>
+
+                </div>
+                <div id="email">
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div id="password1">
+                    <input type="password" name="password1" placeholder="Password" required>
+
+                </div>
+                <div id="password2">
+                    <input type="password" name="password2" placeholder="Confirm password" required>
+
+                </div>
+                <div id="phoneno">
+                    <input type="text" name="phoneno" placeholder="Phone number" id="phoneno" minlength="10"
+                        maxlength="10" required>
+                </div>
+                <a href="{% url 'customer:logincustomer' %}">Already have an account? Log in here</a>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+
+        <div class="overlay-container">
+            <div class="overlay">
+
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello Friend!</h1>
+                    <p>Enter your personal details and start your journey as customer</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    $("a").removeClass("active");
+    $("#signupmenu").addClass("active");
+
+    $("#form").submit(function (event) {
+
+        isValidPhoneNo($("#phoneno input").val(), event);
+        isValidPassword1($("#password1 input").val(), event);
+        isSamePassword($("#password1 input").val(), $("#password2 input").val(), event);
+        isValidEmail($("#email input").val(), event);
+
+    })
+
+    function isValidPhoneNo(phoneno, event) {
+
+        if (!(/^[0-9]+$/.test(phoneno))) {
+            $("#phoneno p").remove();
+            $("#phoneno").append($("<p>").text("Phone no. should contain numbers").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+            event.preventDefault();
+        }
+        else {
+            $("#phoneno p").remove();
+        }
+    }
+
+    function isValidEmail(email, event) {
+        $.ajax({
+            url: "{% url 'seller:emailregistered' %}",
+            method: "GET",
+            data: {
+                email: email
+            },
+            success: function (data) {
+                if (data.error == "Email already registered as Seller" || data.error == "Email already registered as Customer") {
+                    $("#email p").remove();
+                    $("#email").append($("<p>").text(data.error).css({
+                        "color": "red",
+                        "font-size": "10px"
+                    }))
+                    event.preventDefault();
+                }
+                else {
+                    $("#email p").remove();
+                }
+            }
+        })
+
+    }
+
+    function isValidPassword1(password1, event) {
+
+        if (!(password1.length >= 6 && /.*[0-9].*/.test(password1))) {
+            $("#password1 p").remove();
+            $("#password1").append($("<p>").text("Password should be of length greater than 5 and should contain numbers").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+            event.preventDefault();
+        }
+        else {
+            $("#password1 p").remove();
+        }
+    }
+
+    function isSamePassword(password1, password2, event) {
+
+        if (!(password1 == password2)) {
+            $("#password2 p").remove();
+            $("#password2").append($("<p>").text("Password did not match").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+            event.preventDefault();
+        }
+        else {
+            $("#password2 p").remove();
+        }
+    }
+
+</script>
+{%endblock%}

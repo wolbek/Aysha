@@ -1,0 +1,91 @@
+{%extends 'seller/base.html'%}
+{%block content%}
+{%load static%}
+<main>
+    <div class="search-wrapper">
+        <span class="las la-search"></span>
+        <input id="searchcontent" placeholder="Search here (Product name)" autocomplete="off">
+        <br>
+        <!-- To show list result -->
+        <div id="searchlist">
+        </div>
+    </div>
+
+    <script src="/static/js/orderpending.js"></script>
+
+    <table class="content-table">
+        <thead>
+            <tr>
+                <th>Order id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Product</th>
+                <th>Size</th>
+                <th>Quantity</th>
+                <th>Order Date</th>
+                <th>Address</th>
+                <th>Price</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {%for i in orders%}
+            <tr class="orderlist">
+                <td>{{i.id}}</td>
+                <td>{{i.customer_firstname}}</td>
+                <td>{{i.customer_lastname}}</td>
+                <td>{{i.product_label}}</td>
+                <td>{{i.product_size}}</td>
+                <td>{{i.buy_quantity}}</td>
+                <td>{{i.order_date | date:'d/m/Y'}}</td>
+                <td>{{i.to_address}}</td>
+                <td>₹{{i.price}}</td>
+                <td>
+                    <select oid={{i.id}}>
+                        <option selected disabled hidden>{{i.delivery_status}}</option>
+                        <option value="accepted">Accepted</option>
+                        <option value="packed">Packed</option>
+                        <option value="ontheway">On The Way</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancel">Cancel</option>
+                    </select>
+
+                </td>
+            </tr>
+            {%endfor%}
+
+        </tbody>
+    </table>
+
+</main>
+<script>
+    // If completed is selected in deliver_status
+    $(document).on('change', 'select', function () {
+        var option = $(this).find(":selected").text();
+        console.log(option);
+        var oid = $(this).attr("oid")
+        mythis = this
+        $.ajax({
+            method: "POST",
+            url: "{% url 'seller:orderpending' %}",
+            data: {
+                oid: oid,
+                delivery_status: option,
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: function (data) {
+                if (data.status == 0) {
+                    console.log("completed");
+                    $(mythis).closest("tr").fadeOut();
+                }
+            }
+        })
+    })
+    $("a").removeClass("active");
+    $("#orderpending").addClass("active");
+    $("#page").text("Orders Pending");
+
+</script>
+
+{%endblock%}

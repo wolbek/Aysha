@@ -1,0 +1,197 @@
+{%extends 'customer/base.html'%}
+{%block content%}
+{%load static%}
+<link rel="stylesheet" href="/static/css/selectedcategory.css">
+
+<main id="selectedcategory">
+
+    <div class="products">
+        <div class="container">
+            {% if category %}
+            <h1 class="lg-title">{{category}}</h1>
+
+            {% elif searchcontent %}
+            <h1 class="lg-title">Search Result: {{searchcontent}}</h1>
+            {% endif %}
+
+            <!-- <div id="resultcount">{{result.count}} results</div> -->
+
+            <div id="sort">
+                <div>
+                    <input type="radio" name="sortby" id="newest" checked>Newest
+                </div>
+                <div>
+                    <input type="radio" name="sortby" id="price-low-to-high">Price: Low to High
+                </div>
+                <div>
+                    <input type="radio" name="sortby" id="price-high-to-low">Price: High to Low
+                </div>
+                <div>
+                    <input type="radio" name="sortby" id="name-A-Z">Name: A-Z
+                </div>
+                <div>
+                    <input type="radio" name="sortby" id="name-Z-A">Name: Z-A
+                </div>
+
+            </div>
+            <div class="product-items">
+
+
+                {% for i in result %}
+
+                <div class="product">
+                    <a href="{% url 'customer:productdetail' i.id %}">
+                        <div class="product-content">
+                            <div class="product-img">
+                                <img src="{{i.image.url}}" alt="product image">
+                            </div>                            
+                        </div>
+
+                        <div class="product-info">
+                            <div class="product-info-top">
+                                <div class="rating">
+                                    <span><i class="fas fa-star"></i></span>
+                                    <span><i class="fas fa-star"></i></span>
+                                    <span><i class="fas fa-star"></i></span>
+                                    <span><i class="fas fa-star"></i></span>
+                                    <span><i class="far fa-star"></i></span>
+                                </div>
+                            </div>
+                            <p class="product-name">{{i.label}}</p>
+                            <p class="product-price">₹{{i.Mprice | floatformat:2}}</p>
+                        </div>
+                    </a>
+                </div>
+                <!-- end of single product -->
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+</main>
+
+<script>
+    // Make active which is clicked
+    if ("{{category}}" == "Hoodies (Men)" || "{{category}}" == "Sweatshirts (Men)" || "{{category}}" == "Longsleeves (Men)") {
+        $("a").removeClass("active");
+        $("#menmenu").addClass("active");
+    }
+    else if ("{{category}}" == "Hoodies (Women)" || "{{category}}" == "Sweatshirts (Women)" || "{{category}}" == "Longsleeves (Women)") {
+        $("a").removeClass("active");
+        $("#womenmenu").addClass("active");
+    }
+    else {
+        $("a").removeClass("active");
+    }
+
+    $("#newest").click(function () {
+        $.ajax({
+            method: "GET",
+            url: "{% url 'customer:filteredresult' %}",
+            data: {
+                searchcontent: "{{searchcontent}}",
+                category: "{{categorydatabase}}",
+                sortby: 'newest',
+
+            },
+            success: function (data) {
+                console.log(data)
+                $(".product").remove();
+                $.each(data, function (index, product) {                   
+                    $(".product-items").append($("<div>").append($("<a>").append($("<div>").append($("<div>").append($("<img>").attr("src", product.image)).addClass("product-img")).addClass("product-content")).append($("<div>").append($("<div>").append($("<div>").append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("far fa-star"))).addClass("rating")).addClass("product-info-top")).append($("<p>").html(product.label).addClass("product-name")).append($("<p>").html("₹" + product.Mprice.toFixed(2)).addClass("product-price")).addClass("product-info")).attr("href", "../productdetail/" + product.id)).addClass("product"))
+
+                })
+
+
+            }
+        })
+    })
+
+    $("#price-low-to-high").click(function () {
+        $.ajax({
+            method: "GET",
+            url: "{% url 'customer:filteredresult' %}",
+            data: {
+                searchcontent: "{{searchcontent}}",
+                category: "{{categorydatabase}}",
+                sortby: 'price-low-to-high',
+
+            },
+            success: function (data) {
+                console.log(data)
+                $(".product").remove();
+                $.each(data, function (index, product) {
+                    $(".product-items").append($("<div>").append($("<a>").append($("<div>").append($("<div>").append($("<img>").attr("src", product.image)).addClass("product-img")).addClass("product-content")).append($("<div>").append($("<div>").append($("<div>").append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("far fa-star"))).addClass("rating")).addClass("product-info-top")).append($("<p>").html(product.label).addClass("product-name")).append($("<p>").html("₹" + product.Mprice.toFixed(2)).addClass("product-price")).addClass("product-info")).attr("href", "../productdetail/" + product.id)).addClass("product"))
+
+                })
+
+            }
+        })
+    })
+
+    $("#price-high-to-low").click(function () {
+        $.ajax({
+            method: "GET",
+            url: "{% url 'customer:filteredresult' %}",
+            data: {
+                searchcontent: "{{searchcontent}}",
+                category: "{{categorydatabase}}",
+                sortby: 'price-high-to-low',
+
+            },
+            success: function (data) {
+                console.log(data)
+                $(".product").remove();
+                $.each(data, function (index, product) {
+                    $(".product-items").append($("<div>").append($("<a>").append($("<div>").append($("<div>").append($("<img>").attr("src", product.image)).addClass("product-img")).addClass("product-content")).append($("<div>").append($("<div>").append($("<div>").append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("far fa-star"))).addClass("rating")).addClass("product-info-top")).append($("<p>").html(product.label).addClass("product-name")).append($("<p>").html("₹" + product.Mprice.toFixed(2)).addClass("product-price")).addClass("product-info")).attr("href", "../productdetail/" + product.id)).addClass("product"))
+
+                })
+            }
+        })
+    })
+
+    $("#name-A-Z").click(function () {
+        $.ajax({
+            method: "GET",
+            url: "{% url 'customer:filteredresult' %}",
+            data: {
+                searchcontent: "{{searchcontent}}",
+                category: "{{categorydatabase}}",
+                sortby: 'name-A-Z',
+
+            },
+            success: function (data) {
+                console.log(data)
+                $(".product").remove();
+                $.each(data, function (index, product) {
+                    $(".product-items").append($("<div>").append($("<a>").append($("<div>").append($("<div>").append($("<img>").attr("src", product.image)).addClass("product-img")).addClass("product-content")).append($("<div>").append($("<div>").append($("<div>").append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("far fa-star"))).addClass("rating")).addClass("product-info-top")).append($("<p>").html(product.label).addClass("product-name")).append($("<p>").html("₹" + product.Mprice.toFixed(2)).addClass("product-price")).addClass("product-info")).attr("href", "../productdetail/" + product.id)).addClass("product"))
+
+                })
+            }
+        })
+    })
+
+    $("#name-Z-A").click(function () {
+        $.ajax({
+            method: "GET",
+            url: "{% url 'customer:filteredresult' %}",
+            data: {
+                searchcontent: "{{searchcontent}}",
+                category: "{{categorydatabase}}",
+                sortby: 'name-Z-A',
+
+            },
+            success: function (data) {
+                console.log(data)
+                $(".product").remove();
+                $.each(data, function (index, product) {
+                    $(".product-items").append($("<div>").append($("<a>").append($("<div>").append($("<div>").append($("<img>").attr("src", product.image)).addClass("product-img")).addClass("product-content")).append($("<div>").append($("<div>").append($("<div>").append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("fas fa-star"))).append($("<span>").append($("<i>").addClass("far fa-star"))).addClass("rating")).addClass("product-info-top")).append($("<p>").html(product.label).addClass("product-name")).append($("<p>").html("₹" + product.Mprice.toFixed(2)).addClass("product-price")).addClass("product-info")).attr("href", "../productdetail/" + product.id)).addClass("product"))
+
+                })
+            }
+        })
+    })
+
+</script>
+{%endblock%}

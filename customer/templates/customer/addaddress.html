@@ -1,0 +1,101 @@
+{%extends 'customer/base.html'%}
+{%block content%}
+{%load static%}
+<link rel="stylesheet" href="/static/css/addaddress.css">
+    
+<main id="addaddress">
+    <div class="container" id="container">
+
+        <div class="form-container sign-in-container">
+            <form method="POST" id="form">
+                {%csrf_token%}
+                <h1>Add Address</h1>
+                <div id="firstname">
+                    <input type="text" placeholder="First Name" name="firstname"  required>
+                </div>
+                <div id="lastname">
+                    <input type="text" placeholder="Last Name" name="lastname"  required>
+                </div>
+                <input type="text" placeholder="Flat, House No., Building, Company, Apartment" name="addressline1" required>
+                
+                <input type="text" placeholder="Locality,Street,Sector,Village" name="addressline2" required>
+                <input type="text" placeholder="City" name="city" required>
+                <input type="text" placeholder="State" name="state" required>
+                <div id="pincode">
+                    <input type="text" placeholder="Pincode" name="pincode"  minlength="6" maxlength="6" required>
+                </div>
+                
+                {% if savedaddress %}
+                <input type="hidden" name="frompage" value="savedaddress">
+                {% elif ordersummary %}
+                <input type="hidden" name="frompage" value="ordersummary">
+                {% endif %}
+        
+                <button>Add</button>
+            </form>
+        </div>
+
+
+
+    </div>
+</main>
+
+<script>
+    $("a").removeClass("active");
+    $("#customermenu").addClass("active");
+
+    $("#form").submit(function (event) {
+
+        isValidFirstName($("#firstname input").val(), event);
+        isValidLastName($("#lastname input").val(), event);
+        isValidPincode($("#pincode input").val(), event);
+    })
+
+    
+    function isValidFirstName(firstname, event) {
+        // if (!(/.*[A-Za-z].*/.test(shopname))) {     
+        if (!(/^[a-zA-Z]+$/.test(firstname))) {
+            $("#firstname p").remove()
+            $("#firstname").append($("<p>").text("Fistname should only contain letters").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+            event.preventDefault();
+        }
+        else {
+            $("#firstname p").remove()
+        }
+    }
+
+    function isValidLastName(lastname, event) {
+
+        // if (!(/.*[A-Za-z].*/.test(shopname))) {          
+        if (!(/^[a-zA-Z]+$/.test(lastname))) {
+            $("#lastname p").remove()
+            $("#lastname").append($("<p>").text("Lastname should only contain letters").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+            event.preventDefault();
+        }
+        else {
+            $("#lastname p").remove()
+        }
+    }
+
+      function isValidPincode(pincode, event) {
+        if (!(/^[0-9]+$/.test(pincode))) {
+            $("#pincode p").remove();
+            $("#pincode").append($("<p>").text("Pincode should only contain numbers").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+            event.preventDefault();
+        }
+        else {
+            $("#pincode p").remove();
+        }
+    }
+</script>
+
+{%endblock%}

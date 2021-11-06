@@ -1,0 +1,241 @@
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Line Awesome -->
+<link rel="stylesheet"
+    href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+<!-- Fontawesome -->
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+<!-- Jquery CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<!-- Customerside css file -->
+<link rel="stylesheet" href="/static/css/customerside.css">
+
+
+
+
+<nav>
+    <input type="checkbox" id="check">
+    <label for="check" class="checkbtn">
+        <i class="fas fa-bars"></i>
+    </label>
+
+    <ul>
+        <label class="logo">AYSHA</label>
+
+        <li><a href="{% url 'home' %}" id="home">HOME</a></li>
+
+        <span id="men">
+            <li><a id="menmenu">MEN<i class="fas fa-caret-down"></i></a></li>
+            <ul id="menitems">
+                <a href="{% url 'customer:hoodiemen'%}">
+                    <li>Hoodie</li>
+                </a>
+                <a href="{% url 'customer:sweatshirtmen'%}">
+                    <li>Sweatshirt</li>
+                </a>
+                <a href="{% url 'customer:longsleevemen'%}">
+                    <li>Longsleeve</li>
+                </a>
+            </ul>
+        </span>
+
+        <span id="women">
+            <li><a id="womenmenu">WOMEN<i class="fas fa-caret-down"></i></a></li>
+            <ul id="womenitems">
+                <a href="{% url 'customer:hoodiewomen'%}">
+                    <li>Hoodie</li>
+                </a>
+                <a href="{% url 'customer:sweatshirtwomen'%}">
+                    <li>Sweatshirt</li>
+                </a>
+                <a href="{% url 'customer:longsleevewomen'%}">
+                    <li>Longsleeve</li>
+                </a>
+            </ul>
+        </span>
+        {% if user.is_authenticated %}
+
+        <span id="user">
+            <li><a id="customermenu">{{user.email}}<i class="fas fa-caret-down"></i></a></li>
+            <ul id="useroptions">
+                <a href="{% url 'customer:savedaddress' %}">
+                    <li>Address</li>
+                </a>
+                <a href="{% url 'customer:orderhistory' %}">
+                    <li>Orders History</li>
+                </a>
+                <a href="{% url 'customer:changepassword' %}">
+                    <li>Change Password</li>
+                </a>
+                <!-- <a href="{% url 'customer:logoutcustomer' %}"><li>Logout</li></a> -->
+                <li>
+                    <form action="{% url 'customer:logoutcustomer' %}" method="POST">
+                        {%csrf_token%}
+                        <button type="submit">Logout</button>
+                    </form>
+                </li>
+
+            </ul>
+        </span>
+        <li><a href="{% url 'customer:cart' %}" id="cartnavbar">Cart</a></li>
+        {% else %}
+
+        <span id="login">
+            <li><a id="loginmenu">LOGIN<i class="fas fa-caret-down"></i></a></li>
+            <ul id="loginoptions">
+                <a href="{% url 'customer:logincustomer' %}">
+                    <li>Login Customer</li>
+                </a>
+                <a href="{% url 'seller:loginseller'%}">
+                    <li>Login Seller</li>
+                </a>
+            </ul>
+        </span>
+        <span id="signup">
+            <li><a id="signupmenu">SIGNUP<i class="fas fa-caret-down"></i></a></li>
+            <ul id="signupoptions">
+                <a href="{% url 'customer:signupcustomer' %}">
+                    <li>SignUp Customer</li>
+                </a>
+                <a href="{% url 'seller:signupseller'%}">
+                    <li>SignUp Seller</li>
+                </a>
+            </ul>
+        </span>
+
+        {% endif %}
+
+    </ul>
+    <li class="search-wrapper">
+        <form method="POST" action="{% url 'customer:searchresultproduct' %}">
+            {% csrf_token %}
+            <input id="searchcontent" placeholder="Search here" autocomplete="off" name="searchcontent">
+            <button class="las la-search" type="submit"></button>
+        </form>
+        <div id="searchlist">
+        </div>
+    </li>
+</nav>
+<!-- <section></section> -->
+</body>
+
+<script>
+    $("#menitems").hide();
+    $("#men").click(function () {
+        $("#menitems").toggle();
+    })
+
+    $("#womenitems").hide();
+    $("#women").click(function () {
+        $("#womenitems").toggle();
+    })
+
+    $("#useroptions").hide();
+    $("#user").click(function () {
+        $("#useroptions").toggle();
+    })
+
+    $("#loginoptions").hide();
+    $("#login").click(function () {
+        $("#loginoptions").toggle();
+    })
+
+    $("#signupoptions").hide();
+    $("#signup").click(function () {
+        $("#signupoptions").toggle();
+    })
+
+    // When click outside of the search box and list result, the list result should vanish
+    $(document).click(function (event) {
+        var $target = $(event.target);
+        if (!$target.closest('#men').length && $('#menitems').is(":visible")) {
+            $("#menitems").css("display", "none");
+
+        }
+    });
+
+    $(document).click(function (event) {
+        var $target = $(event.target);
+        if (!$target.closest('#women').length && $('#womenitems').is(":visible")) {
+            $("#womenitems").css("display", "none");
+        }
+    });
+
+    $(document).click(function (event) {
+        var $target = $(event.target);
+        if (!$target.closest('#user').length && $('#useroptions').is(":visible")) {
+            $("#useroptions").css("display", "none");
+        }
+    });
+
+    $(document).click(function (event) {
+        var $target = $(event.target);
+        if (!$target.closest('#login').length && $('#loginoptions').is(":visible")) {
+            $("#loginoptions").css("display", "none");
+        }
+    });
+
+    $(document).click(function (event) {
+        var $target = $(event.target);
+        if (!$target.closest('#signup').length && $('#signupoptions').is(":visible")) {
+            $("#signupoptions").css("display", "none");
+        }
+    });
+
+    // For cursor to turn into pointer when hovered on navbar
+    $("#men a,#women a,#user a,#login a,#signup a").mouseenter(function () {
+        $(this).css("cursor", "pointer");
+    })
+
+
+
+    // Result list when you type something in search bar
+    $("#searchcontent").on("click keyup", function (event) {
+
+        if ($(this).val() == "") {
+            $(".list-items").remove();
+        }
+        else if (event.which != 13) {
+            var searchcontent = $(this).val();
+            $.ajax({
+                method: "GET",
+                url: "{% url 'customer:productlist' %}",
+                data: {
+                    searchcontent: searchcontent
+                },
+                success: function (data) {
+                    // console.log(data)        
+                    $(".list-items").remove();
+                    $.each(data, function (index, product) {
+                        $("#searchlist").append($("<p>").text(product.label).addClass("list-items"));
+
+                    })
+                }
+            })
+        }
+    });
+
+    // To allow clicking on the list result (as it is been added dynamically we have to use delegated events)
+    $("body").on("click", ".list-items", function () {
+        $("#searchcontent").empty();
+        $("#searchcontent").val($(this).text());
+        $(".list-items").remove();
+        $("#searchcontent").focus();
+    })
+
+    // When click outside of the search box and list result, the list result should vanish
+    $(document).click(function (event) {
+        var $target = $(event.target);
+        if (!$target.closest('#searchlist').length && !$target.closest('#searchcontent').length && $('#searchlist').is(":visible")) {
+            $('.list-items').remove();
+        }
+    });
+
+</script>
+
+
+{%block content%}{%endblock%}

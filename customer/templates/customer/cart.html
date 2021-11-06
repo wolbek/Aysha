@@ -1,0 +1,221 @@
+{%extends 'customer/base.html'%}
+{%block content%}
+{%load static%}
+
+<link rel="stylesheet" href="/static/css/cart.css">
+
+<main id="cart">
+
+    <div class="message-wrapper">
+        {%for message in messages%}
+        <div class="messageGreen">
+            <span>{{message}}</span>
+        </div>
+        {%endfor%}
+    </div>
+
+    <h1>Cart</h1>
+    <div id="container">
+        <div id="cart-wrapper">
+
+            {% for i in cartitems %}
+            <div class="product" pid={{i.id}}>
+                <div class="image-box">
+                    <a href="{% url 'customer:productdetail' i.product.id %}"><img src="{{i.product.image.url}}"></a>
+                </div>
+                <div class="description-box">
+                    <span class="productlabel">
+                        <h2>{{i.product.label}}</h2>
+                    </span>
+
+                    <div class="description-box-content">
+                        <div class="available"></div>
+                        <div>Size: <span class="productsize">{{i.product_size}}</span></div>
+                        <div>Price: ₹{{i.price | floatformat:2}}</div>
+                        <span class="removeitem" pid="{{i.id}}"><button type="submit">Remove</button></span>
+                    </div>
+
+                </div>
+                <div class="quantity-box">
+                    <div><span class="minusamount" pid="{{i.id}}"><button type="submit">-</button></span><span
+                            class="save_quantity">{{i.save_quantity}}</span><span class="plusamount" pid="{{i.id}}"><button
+                                type="submit">+</button></span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+
+
+        <div id="pay-wrapper">
+            <div id="payment">
+                <h2>Total Payment</h2>
+                <div class="subtotalprice">
+                    <div>Price (<span id="totalitems">{{totalitems}} item{{totalitems | pluralize}}</span>):</div>
+                    <div>₹<span id="totalprice">{{totalprice | floatformat:2}}</span></div>
+                </div>
+                <div class="shippingprice">
+                    <div>Shipping:</div>
+                    <div>₹<span id="shippingprice">100.00</span></div>
+                </div>
+                <div class="totalprice">
+                    <div>Total:</div>
+                    <div>₹<span id="totalpriceshippingprice"></span></div>
+                </div>
+                <a href="{% url 'customer:ordersummary' %}" id="proceedtobuylink"><button id="proceedtobuy">Proceed To
+                        Buy</button></a>
+            </div>
+
+
+        </div>
+    </div>
+
+</main>
+
+<script>
+    // To modify totalpriceshippingprice when totalprice gets changed    
+
+    if (Number($("#totalprice").text()) > 0.00) {
+        $("#shippingprice").text("100.00");
+        $("#totalpriceshippingprice").text((Number($("#totalprice").text()) + Number($("#shippingprice").text())).toFixed(2));
+    }
+    else {
+        $("#shippingprice").text("0.00");
+        $("#totalpriceshippingprice").text((Number($("#totalprice").text()) + Number($("#shippingprice").text())).toFixed(2));
+    }
+
+    $('body').on('DOMSubtreeModified', '#totalprice', function () {
+        if (Number($("#totalprice").text()) > 0.00) {
+            $("#shippingprice").text("100.00");
+            $("#totalpriceshippingprice").text((Number($("#totalprice").text()) + Number($("#shippingprice").text())).toFixed(2));
+        }
+        else {
+            $("#shippingprice").text("0.00");
+            $("#totalpriceshippingprice").text((Number($("#totalprice").text()) + Number($("#shippingprice").text())).toFixed(2));
+        }
+    });
+
+    function instockornot(product, change) {
+        console.log(product)
+        pid = $(product).attr("pid")
+        amount = 0
+        $.ajax({
+            method: "POST",
+            url: "{% url 'customer:instockornot' %}",
+            data: {
+                pid: pid,
+                productsize: $(product).find('.productsize').text(),
+                change: change,
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: function (data) {
+                if (data.available == "IN STOCK") {
+                    $(product).find('.available').text(data.available).css("color", "green");
+                }
+                else {
+                    $(product).find('.available').text(data.available).css("color", "red");
+                }
+                if (change == "plus" || change == "minus") {
+                    // To update quantity
+                    amount = Number($(product).find('.save_quantity').text());
+                    if (change == "plus")
+                        $(product).find('.save_quantity').text(++amount);
+
+                    if (change == "minus")
+                        $(product).find('.save_quantity').text(--amount);
+                    // To update total amount and show text in plural
+                    if (data.totalitems != 1) {
+                        $("#totalitems").text(data.totalitems + " items");
+                    }
+                    else {
+                        $("#totalitems").text(data.totalitems + " item");
+                    }
+                    // To update price
+                    $("#totalprice").text(data.totalprice.toFixed(2));
+                }
+
+            }
+        })
+    }
+
+    // To show in stock or not of all items when page opens
+    document.querySelectorAll('.product').forEach(function (product) {
+        instockornot(product, "none");
+    });
+
+    // To show product is in stock or not when plus button is clicked of that product and increase quantity,totalitems,and totalprice too
+    $(".plusamount").click(function () {
+        instockornot($(this).closest('.product'), "plus");
+    })
+
+    // To show product is in stock or not when minus button is clicked of that product and decrease quantity,,totalitems,and totalprice too
+    $(".minusamount").click(function () {
+        if (Number($(this).closest('.product').find('.save_quantity').text()) > 1) {
+            instockornot($(this).closest('.product'), "minus");
+        }
+    })
+
+    $(".removeitem").click(function () {
+        mythis = this;
+        $.ajax({
+            method: "POST",
+            url: "{% url 'customer:removeitem' %}",
+            data: {
+                pid: $(mythis).attr("pid"),
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: function (data) {
+                if (data.status == 1) {
+                    
+                    $(mythis).closest(".product").fadeOut(300, function () {
+                        $(mythis).closest(".product").remove();
+                        // To remove shadow when there is no product
+                        if ($(".product").length == 0) {
+                            $("#cart-wrapper").css("box-shadow", "none");
+                        }
+                        
+                    });
+                    $(".message-wrapper").remove()
+                    $("main").prepend($("<div>").append($("<div>").append($("<span>").html(data.message)).addClass("messageGreen")).addClass("message-wrapper"))
+
+                    if (data.totalitems != 1) {
+                        $("#totalitems").text(data.totalitems + " items");
+                    }
+                    else {
+                        $("#totalitems").text(data.totalitems + " item");
+                    }
+                    $("#totalprice").text(data.totalprice.toFixed(2));
+
+                }
+
+            }
+        })
+    })
+
+    $("#proceedtobuy").click(function (event) {
+        document.querySelectorAll('.product').forEach(function (product) {
+
+            if (!($(product).find('.available').text() == "IN STOCK")) {
+                console.log($(product).find('.productlabel').text())
+                labelname=$.trim($(product).find('.productlabel').text())
+                alert("Decrease quantity of " + labelname);
+                event.preventDefault();
+            }
+
+        })
+        if($(".product").length==0){
+            alert("Add a product in cart to proceed");
+                event.preventDefault();
+        }
+    })
+
+    $("a").removeClass("active");
+    $("#cartnavbar").addClass("active");
+    if ($(".product").length == 0) {
+        $("#cart-wrapper").css("box-shadow", "none");
+    }
+
+</script>
+{%endblock%}

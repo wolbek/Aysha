@@ -1,0 +1,198 @@
+{%extends 'customer/base.html'%}
+{%block content%}
+{%load static%}
+
+<link rel="stylesheet" href="/static/css/ordersummary.css">
+
+<main id="ordersummary">
+    
+    <div class="message-wrapper">
+        {%for message in messages%}
+        <div class="messageGreen">
+            <span>{{message}}</span>
+        </div>
+        {%endfor%}
+    </div>
+
+    <h1>Order Summary</h1>
+    <div id="container">
+        <div id="left-section">
+            {% if singleitem %}
+            <div id="cart-wrapper">
+                <div class="product">
+                    <div class="image-box">
+                        <a href="{% url 'customer:productdetail' product.id %}"><img src="{{product.image.url}}"></a>
+                    </div>
+                    <div class="description-box">
+                        <span class="productlabel">
+                            <h2>{{product.label}}</h2>
+                        </span>
+
+                        <div class="description-box-content">
+                            <div class="available"></div>
+                            <div>Size: <span class="productsize">{{productsize}}</span></div>
+                            <div>Price: ₹{{productprice | floatformat:2}}</div>
+                            <div>Quantity: 1</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% else %}
+
+            <div id="cart-wrapper">
+
+                {% for i in cartitems %}
+                <div class="product">
+                    <div class="image-box">
+                        <a href="{% url 'customer:productdetail' i.product.id %}"><img
+                                src="{{i.product.image.url}}"></a>
+                    </div>
+                    <div class="description-box">
+                        <span class="productlabel">
+                            <h2>{{i.product.label}}</h2>
+                        </span>
+
+                        <div class="description-box-content">
+                            <div class="available"></div>
+                            <div>Size: <span class="productsize">{{i.product_size}}</span></div>
+                            <div>Price: ₹{{i.price | floatformat:2}}</div>
+                            <div>Quantity: {{i.save_quantity}}</div>
+                        </div>
+
+                    </div>
+
+                </div>
+                {% endfor %}
+
+            </div>
+            {% endif %}
+        </div>
+        <div id="right-section">
+
+
+            <div id="pay-wrapper">
+                {% if singleitem %}
+                <div id="payment">
+                    <h2>Total Payment</h2>
+                    <div class="subtotalprice">
+                        <div>Price (1 item):</div>
+                        <div>₹<span id="totalprice">{{productprice | floatformat:2}}</span></div>
+                    </div>
+                    <div class="shippingprice">
+                        <div>Shipping:</div>
+                        <div>₹<span id="shippingprice">100.00</span></div>
+                    </div>
+                    <div class="totalprice">
+                        <div>Total:</div>
+                        <div>₹<span id="totalpriceshippingprice"></span></div>
+                    </div>
+                    <!-- <a href="{% url 'customer:ordersummary' %}" id="proceedtobuylink"><button id="proceedtobuy">Proceed
+                            To
+                            Buy</button></a> -->
+
+                    <form action="{% url 'customer:singlepaymentsuccess' %}" method="POST" id="paymentform">
+                        {% csrf_token %}
+                        <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="rzp_test_5T9IAkXd2Zeh6q"
+                            data-amount={{order.amount}} data-currency={{order.currency}} data-order_id={{order.id}}
+                            data-buttontext="Pay" data-name="Aysha" data-description="Final Payment"
+                            data-image="https://i.pinimg.com/originals/c8/d6/48/c8d648f91adf20491fd9a567f2de0d0f.png"
+                            data-prefill.contact={{order.notes.phone}} data-prefill.email={{order.notes.email}}
+                            data-theme.color="#004cff"></script>
+                        <input type="hidden" custom="Hidden Element" name="hidden">
+                        <input type="hidden" id="productid" name="productid" value="{{product.id}}">
+                        <input type="hidden" id="productsize" name="productsize" value="{{productsize}}">
+                        <input type="hidden" id="productprice" name="productprice" value="{{productprice}}">
+                        <input type="hidden" id="orderfirstname" name="orderfirstname" value="">
+                        <input type="hidden" id="orderlastname" name="orderlastname" value="">
+                        <input type="hidden" id="orderaddress" name="orderaddress" value="">
+                    </form>
+                </div>
+                {% else %}
+                <div id="payment">
+                    <h2>Total Payment</h2>
+                    <div class="subtotalprice">
+                        <div>Price (<span id="totalitems">{{totalitems}} item{{totalitems | pluralize}}</span>):</div>
+                        <div>₹<span id="totalprice">{{totalprice | floatformat:2}}</span></div>
+                    </div>
+                    <div class="shippingprice">
+                        <div>Shipping:</div>
+                        <div>₹<span id="shippingprice">100.00</span></div>
+                    </div>
+                    <div class="totalprice">
+                        <div>Total:</div>
+                        <div>₹<span id="totalpriceshippingprice"></span></div>
+                    </div>
+                    <!-- <a href="{% url 'customer:ordersummary' %}" id="proceedtobuylink"><button id="proceedtobuy">Proceed
+                            To
+                            Buy</button></a> -->
+                    <form action="{% url 'customer:paymentsuccess' %}" method="POST" id="paymentform">
+                        {% csrf_token %}
+                        <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="rzp_test_5T9IAkXd2Zeh6q"
+                            data-amount={{order.amount}} data-currency={{order.currency}} data-order_id={{order.id}}
+                            data-buttontext="Pay" data-name="Aysha" data-description="Final Payment"
+                            data-image="https://i.pinimg.com/originals/c8/d6/48/c8d648f91adf20491fd9a567f2de0d0f.png"
+                            data-prefill.contact={{order.notes.phone}} data-prefill.email={{order.notes.email}}
+                            data-theme.color="#004cff"></script>
+                        <input type="hidden" custom="Hidden Element" name="hidden">
+                        <input type="hidden" id="orderfirstname" name="orderfirstname" value="">
+                        <input type="hidden" id="orderlastname" name="orderlastname" value="">
+                        <input type="hidden" id="orderaddress" name="orderaddress" value="">
+                    </form>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <div id="address-wrapper">
+                <h2>Select Address</h2>
+
+                {% for i in customeraddresses%}
+                <div class="addressbox">
+                    <div class="addressnumber">
+                        <input type="radio" name="radioaddressbox" class="radioaddressbox"> Address {{forloop.counter}}
+                    </div>
+                    <div><b><span class="firstname">{{i.firstname}}</span> <span
+                                class="lastname">{{i.lastname}}</span></b></div>
+                    <div class="address">{{i.address}}</div>
+                </div>
+                {% endfor %}
+
+                <!-- <button>Add Address</button> -->
+                <form action="{% url 'customer:addaddress' %}" method="GET">
+                    <button type="submit">Add New Address</button>
+                    <input type="hidden" name="frompage" value="ordersummary">
+                </form>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<script>
+
+    $(".radioaddressbox").eq(0).attr('checked', 'checked');
+
+
+    $("#totalpriceshippingprice").text((Number($("#totalprice").text()) + Number($("#shippingprice").text())).toFixed(2));
+
+    // To make user select address first and then pay
+    $("#paymentform").click(function (event) {
+
+        $("#orderfirstname").val($("input[name='radioaddressbox']:checked").closest(".addressbox").find(".firstname").text())
+        $("#orderlastname").val($("input[name='radioaddressbox']:checked").closest(".addressbox").find(".lastname").text())
+        $("#orderaddress").val($("input[name='radioaddressbox']:checked").closest(".addressbox").find(".address").text())
+
+
+    })
+
+    // To add address if there's no address
+    $("#paymentform").click(function (event) {
+        if (!($(".radioaddressbox")[0])) {
+            alert("Add an address");
+            event.preventDefault();
+        }
+    })
+
+</script>
+{%endblock%}

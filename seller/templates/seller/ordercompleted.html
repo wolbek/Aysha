@@ -1,0 +1,58 @@
+{%extends 'seller/base.html'%}
+{%block content%}
+{%load static%}
+
+<main>
+
+    <div class="search-wrapper">
+        <span class="las la-search"></span>
+        <input id="searchcontent" placeholder="Search here (Product name)" autocomplete="off">
+        <br>
+        <!-- To show list result -->
+        <div id="searchlist">
+        </div>
+    </div>
+
+    <script src="/static/js/ordercompleted.js"></script>
+
+    <table class="content-table">
+        <thead>
+            <th>Order ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Quantity</th>
+            <th>Order Date</th>
+            <th>Address</th>
+            <th>Price</th>
+            <th>Status</th>
+        </thead>
+        <tbody>            
+            {%for i in orders%}
+            <tr class="orderlist">
+                <td>{{i.id}}</td>
+                <td>{{i.customer_firstname}}</td>
+                <td>{{i.customer_lastname}}</td>
+                <td>{{i.product_label}}</td>
+                <td>{{i.product_size}}</td>
+                <td>{{i.buy_quantity}}</td>
+                <td>{{i.order_date | date:'d/m/Y'}}</td>
+                <td>{{i.to_address}}</td>
+                <td>₹{{i.price}}</td>
+                <td>Delivered on {{i.delivered_date | date:'d/m/Y'}}</td>
+            </tr>
+            {%endfor%}
+
+        </tbody>
+    </table>
+
+</main>
+
+<script>
+    $("a").removeClass("active");
+    $("#ordercompleted").addClass("active");
+    $("#page").text("Orders Completed");
+</script>
+
+{%endblock%}
