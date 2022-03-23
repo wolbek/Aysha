@@ -1,13 +1,13 @@
 TO USE THE PROJECT:
 
-Clone the project:
-git clone https://github.com/wolbek/E-Commerce-Store.git
+Clone the project:  
+git clone https://github.com/wolbek/E-Commerce-Store.git  
 
-Change your path to the project in cli and install:
-pip install -r requirements.txt
+Change your path to the project in cli and install:  
+pip install -r requirements.txt  
 
-Run the project:
-python manage.py runserver
+Run the project:  
+python manage.py runserver  
 
 ------------------------------------------------------------
 
