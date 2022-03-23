@@ -20,6 +20,9 @@ pip install -r requirements.txt
 Run the project using:  
 python manage.py runserver  
 
+In the browser open:
+localhost:8000
+
 ------------------------------------------------------------
 
 To login as superadmin in superadmin dashboard use:  
