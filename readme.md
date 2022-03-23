@@ -1,17 +1,28 @@
 TO USE THE PROJECT:
 
-Clone the project:
+Clone the project using:
 git clone https://github.com/wolbek/E-Commerce-Store.git
 
-Change your path to the project in cli and install:
+Change your path to the project in cli
+
+Install virtual env using:
+pip install virtualenv
+
+Make virtual environment using:
+virtualenv venv
+
+Activate virtual environment using:
+.\venv\Scripts\activate
+
+Install requirements.txt using:
 pip install -r requirements.txt
 
-Run the project:
+Run the project using:
 python manage.py runserver
 
 ------------------------------------------------------------
 
-To login as superadmin in superadmin dashboard:
+To login as superadmin in superadmin dashboard use:
 email: superadmin@gmail.com
 password:superadmin
 
