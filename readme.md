@@ -1,7 +1,7 @@
 TO USE THE PROJECT:
 
-Clone the project using:
-git clone https://github.com/wolbek/E-Commerce-Store.git
+Clone the project using:  
+git clone https://github.com/wolbek/E-Commerce-Store.git  
 
 Change your path to the project in cli
 
