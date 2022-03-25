@@ -319,9 +319,7 @@ def orderhistory(request):
 
 @api_view(['GET'])
 def filteredresult(request):
-    # print("------------------")
-    # print(request.GET['category'])
-    # print(request.GET['searchcontent'])
+
     if request.GET['category']=="":
         if request.GET['sortby']=='newest':
             products=Product.objects.filter(label__icontains=request.GET['searchcontent']).order_by('-id')

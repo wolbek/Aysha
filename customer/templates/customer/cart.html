@@ -98,7 +98,6 @@
     });
 
     function instockornot(product, change) {
-        console.log(product)
         pid = $(product).attr("pid")
         amount = 0
         $.ajax({
@@ -198,7 +197,6 @@
         document.querySelectorAll('.product').forEach(function (product) {
 
             if (!($(product).find('.available').text() == "IN STOCK")) {
-                console.log($(product).find('.productlabel').text())
                 labelname=$.trim($(product).find('.productlabel').text())
                 alert("Decrease quantity of " + labelname);
                 event.preventDefault();

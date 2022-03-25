@@ -63,7 +63,6 @@
     // If completed is selected in deliver_status
     $(document).on('change', 'select', function () {
         var option = $(this).find(":selected").text();
-        console.log(option);
         var oid = $(this).attr("oid")
         mythis = this
         $.ajax({
@@ -76,7 +75,6 @@
             },
             success: function (data) {
                 if (data.status == 0) {
-                    console.log("completed");
                     $(mythis).closest("tr").fadeOut();
                 }
             }

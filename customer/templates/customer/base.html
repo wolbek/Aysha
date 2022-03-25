@@ -208,7 +208,6 @@
                     searchcontent: searchcontent
                 },
                 success: function (data) {
-                    // console.log(data)        
                     $(".list-items").remove();
                     $.each(data, function (index, product) {
                         $("#searchlist").append($("<p>").text(product.label).addClass("list-items"));

@@ -33,7 +33,7 @@
                 </div>
                   
                 <a href="{% url 'seller:loginseller' %}">Already have an account? Log in here</a>
-                <button type="submit">Sign Up</button>
+                <button type="button" id="signUp">Sign Up</button>
             </form>
         </div>
 
@@ -56,96 +56,153 @@
     $("a").removeClass("active");
     $("#signupmenu").addClass("active");
 
-    $("#form").submit(function (event) {
-        isValidShopName($("#shopname input").val(), event);
-        isValidPhoneNo($("#phoneno input").val(), event);
-        isValidEmail($("#email input").val(), event);
-        isValidPassword1($("#password1 input").val(), event);
-        isSamePassword($("#password1 input").val(), $("#password2 input").val(), event);
+    $("#signUp").click(async function (event) {
+        isValidShopName($("#shopname input").val());
+        isValidPhoneNo($("#phoneno input").val());
+        isValidEmail($("#email input").val());
+        isValidPassword1($("#password1 input").val());
+        isSamePassword($("#password1 input").val(), $("#password2 input").val());
+        isValidWarehouse($("#warehouselocation input").val());
+        let validFormResult = await validForm($("#shopname input").val(),$("#phoneno input").val(), $("#email input").val(), $("#password1 input").val(), $("#password2 input").val(),$("#warehouselocation input").val());
+        if (validFormResult) {
+            $('#form').submit();
+        }
     })
 
-    function isValidShopName(shopname, event) {
+    async function validForm(shopname, phoneno, email, password1, password2, warehouselocation) {
+        let isEmailRegistered = await IsEmailRegistered(email);
+        
+        if (/^[a-zA-Z]+[a-zA-Z0-9_.-]*$/.test(shopname) && isEmailRegistered.error == "Not registered" && (phoneno.length == 10 && /^[0-9]+$/.test(phoneno)) && (password1.length >= 6 && /.*[0-9].*/.test(password1)) && password1 == password2 && warehouselocation!="")
+            return true;
+        else
+            return false;
+    }
 
-        if (!(/^[a-zA-Z]+[a-zA-Z0-9_.-]*$/.test(shopname))) {
+    function isValidShopName(shopname) {
+        if ($("#shopname input").val() == "") {
+            $("#shopname p").remove()
+            $("#shopname").append($("<p>").text("Enter your shopname").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+        }
+        else if (!(/^[a-zA-Z]+[a-zA-Z0-9_.-]*$/.test(shopname))) {
             $("#shopname p").remove()
             $("#shopname").append($("<p>").text("Shopname should start with letter, can contain numbers, no special characters allowed").css({
                 "color": "red",
                 "font-size": "10px"
             }))
-            event.preventDefault();
         }
         else {
             $("#shopname p").remove()
         }
     }
 
-    function isValidPhoneNo(phoneno, event) {
-
-        if (!(/^[0-9]+$/.test(phoneno))) {
+    function isValidPhoneNo(phoneno) {
+        if ($("#phoneno input").val() == "") {
             $("#phoneno p").remove();
-            $("#phoneno").append($("<p>").text("Phone no. should contain numbers").css({
+            $("#phoneno").append($("<p>").text("Enter your phone no.").css({
                 "color": "red",
                 "font-size": "10px"
             }))
-            event.preventDefault();
+        }
+        else if (!(phoneno.length == 10 && /^[0-9]+$/.test(phoneno))) {
+            $("#phoneno p").remove();
+            $("#phoneno").append($("<p>").text("Phone no. should contain 10 numbers").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
         }
         else {
             $("#phoneno p").remove();
         }
     }
 
-    function isValidEmail(email, event) {
-        $.ajax({
+    async function isValidEmail(email) {
+        let isEmailRegistered = await IsEmailRegistered(email);
+        if ($("#email input").val() == "") {
+            $("#email p").remove();
+            $("#email").append($("<p>").text("Enter your email").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+        }
+        else if (isEmailRegistered.error == "Email already registered as Seller" || isEmailRegistered.error == "Email already registered as Customer") {
+            $("#email p").remove();
+            $("#email").append($("<p>").text(isEmailRegistered.error).css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+        }
+        
+        else {
+            $("#email p").remove();
+        }
+
+    }
+
+    async function IsEmailRegistered(email) {
+        return $.ajax({
             url: "{% url 'seller:emailregistered' %}",
             method: "GET",
             data: {
                 email: email
-            },
-            success: function (data) {
-                console.log(data.error)
-                if (data.error == "Email already registered as Seller" || data.error == "Email already registered as Customer") {
-                    $("#email p").remove();
-                    $("#email").append($("<p>").text(data.error).css({
-                        "color": "red",
-                        "font-size": "10px"
-                    }))
-                    event.preventDefault();
-                }
-                else {
-                    $("#email p").remove();
-                }
             }
-        })
 
+        })
     }
 
-    function isValidPassword1(password1, event) {
-
-        if (!(password1.length >= 6 && /.*[0-9].*/.test(password1))) {
+    function isValidPassword1(password1) {
+        if ($("#password1 input").val() == "") {
+            $("#password1 p").remove();
+            $("#password1").append($("<p>").text("Enter your password").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+        }
+        else if (!(password1.length >= 6 && /.*[0-9].*/.test(password1))) {
             $("#password1 p").remove();
             $("#password1").append($("<p>").text("Password should be of length greater than 5 and should contain numbers").css({
                 "color": "red",
                 "font-size": "10px"
             }))
-            event.preventDefault();
         }
         else {
             $("#password1 p").remove();
         }
     }
 
-    function isSamePassword(password1, password2, event) {
-
-        if (!(password1 == password2)) {
+    function isSamePassword(password1, password2) {
+        if ($("#password2 input").val() == "") {
+            $("#password2 p").remove();
+            $("#password2").append($("<p>").text("Confirm your password").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+        }
+        else if (!(password1 == password2)) {
             $("#password2 p").remove();
             $("#password2").append($("<p>").text("Password did not match").css({
                 "color": "red",
                 "font-size": "10px"
             }))
-            event.preventDefault();
         }
         else {
             $("#password2 p").remove();
+        }
+    }
+
+    function isValidWarehouse(warehouselocation) {
+        if ($("#warehouselocation input").val() == "") {
+            $("#warehouselocation p").remove()
+            $("#warehouselocation").append($("<p>").text("Enter your warehouse location").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+        }
+      
+        else {
+            $("#warehouselocation p").remove()
         }
     }
 

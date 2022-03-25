@@ -6,12 +6,12 @@
 <main id="signupcustomer">
     <div class="container" id="container">
         <div class="form-container sign-in-container">
-            <form id="form" method="POST" >
+            <form id="form" method="POST">
                 {%csrf_token%}
                 <h1>Sign up</h1>
                 <div id="gender">
                     <div style="margin-right:50px;">
-                        <input type="radio" value="M" name="gender" id="male" checked="checked" required >Male
+                        <input type="radio" value="M" name="gender" id="male" checked="checked" required>Male
                     </div>
                     <div>
                         <input type="radio" value="F" name="gender" id="female">Female
@@ -34,7 +34,7 @@
                         maxlength="10" required>
                 </div>
                 <a href="{% url 'customer:logincustomer' %}">Already have an account? Log in here</a>
-                <button type="submit">Sign Up</button>
+                <button type="button" id="signUp">Sign Up</button>
             </form>
         </div>
 
@@ -55,78 +55,118 @@
     $("a").removeClass("active");
     $("#signupmenu").addClass("active");
 
-    $("#form").submit(function (event) {
+    $("#signUp").click(async function (event) {
 
-        isValidPhoneNo($("#phoneno input").val(), event);
-        isValidPassword1($("#password1 input").val(), event);
-        isSamePassword($("#password1 input").val(), $("#password2 input").val(), event);
-        isValidEmail($("#email input").val(), event);
+        isValidPhoneNo($("#phoneno input").val());
+        isValidPassword1($("#password1 input").val());
+        isSamePassword($("#password1 input").val(), $("#password2 input").val());
+        isValidEmail($("#email input").val());
+        let validFormResult = await validForm($("#phoneno input").val(), $("#email input").val(), $("#password1 input").val(), $("#password2 input").val());
+        if (validFormResult) {
+            $('#form').submit();
+        }
 
     })
 
-    function isValidPhoneNo(phoneno, event) {
+    async function validForm(phoneno, email, password1, password2) {
+        let isEmailRegistered = await IsEmailRegistered(email);
+        if (isEmailRegistered.error == "Not registered" && (phoneno.length == 10 && /^[0-9]+$/.test(phoneno)) && (password1.length >= 6 && /.*[0-9].*/.test(password1)) && password1 == password2)
+            return true;
+        else
+            return false;
+    }
 
-        if (!(/^[0-9]+$/.test(phoneno))) {
+    function isValidPhoneNo(phoneno) {
+        if ($("#phoneno input").val() == "") {
             $("#phoneno p").remove();
-            $("#phoneno").append($("<p>").text("Phone no. should contain numbers").css({
+            $("#phoneno").append($("<p>").text("Enter your phone no.").css({
                 "color": "red",
                 "font-size": "10px"
             }))
-            event.preventDefault();
         }
+        else if (!(phoneno.length == 10 && /^[0-9]+$/.test(phoneno))) {
+            $("#phoneno p").remove();
+            $("#phoneno").append($("<p>").text("Phone no. should contain 10 numbers").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+        }
+
         else {
             $("#phoneno p").remove();
         }
     }
 
-    function isValidEmail(email, event) {
-        $.ajax({
+    async function isValidEmail(email) {
+        let isEmailRegistered = await IsEmailRegistered(email);
+
+        if ($("#email input").val() == "") {
+            $("#email p").remove();
+            $("#email").append($("<p>").text("Enter your email").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+        }
+        else if (isEmailRegistered.error == "Email already registered as Seller" || isEmailRegistered.error == "Email already registered as Customer") {
+            $("#email p").remove();
+            $("#email").append($("<p>").text(isEmailRegistered.error).css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+        }
+        
+        else {
+            $("#email p").remove();
+        }
+    }
+
+    async function IsEmailRegistered(email) {
+        return $.ajax({
             url: "{% url 'seller:emailregistered' %}",
             method: "GET",
             data: {
                 email: email
-            },
-            success: function (data) {
-                if (data.error == "Email already registered as Seller" || data.error == "Email already registered as Customer") {
-                    $("#email p").remove();
-                    $("#email").append($("<p>").text(data.error).css({
-                        "color": "red",
-                        "font-size": "10px"
-                    }))
-                    event.preventDefault();
-                }
-                else {
-                    $("#email p").remove();
-                }
             }
-        })
 
+        })
     }
 
-    function isValidPassword1(password1, event) {
+    function isValidPassword1(password1) {
+        if ($("#password1 input").val() == "") {
+            $("#password1 p").remove();
+            $("#password1").append($("<p>").text("Enter your password").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+        }
 
-        if (!(password1.length >= 6 && /.*[0-9].*/.test(password1))) {
+        else if (!(password1.length >= 6 && /.*[0-9].*/.test(password1))) {
             $("#password1 p").remove();
             $("#password1").append($("<p>").text("Password should be of length greater than 5 and should contain numbers").css({
                 "color": "red",
                 "font-size": "10px"
             }))
-            event.preventDefault();
         }
         else {
             $("#password1 p").remove();
         }
     }
 
-    function isSamePassword(password1, password2, event) {
+    function isSamePassword(password1, password2) {
+        if ($("#password2 input").val() == "") {
+            $("#password2 p").remove();
+            $("#password2").append($("<p>").text("Confirm your password").css({
+                "color": "red",
+                "font-size": "10px"
+            }))
+        }
 
-        if (!(password1 == password2)) {
+        else if (!(password1 == password2)) {
             $("#password2 p").remove();
             $("#password2").append($("<p>").text("Password did not match").css({
                 "color": "red",
                 "font-size": "10px"
             }))
-            event.preventDefault();
         }
         else {
             $("#password2 p").remove();

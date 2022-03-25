@@ -35,7 +35,6 @@ def signupseller(request):
 
 @api_view(['GET'])
 def emailregistered(request):    
-    print("LOL")
     user=User.objects.filter(email=request.GET['email'])
     error=""         
     try:   
@@ -186,7 +185,6 @@ def completedorderlist(request):
 def genderchart(request):
    
     malecount=Customer.objects.filter(gender="M").count()
-    print(malecount)
     femalecount=Customer.objects.filter(gender="F").count()
     
     data={
@@ -226,7 +224,6 @@ def productdata(request):
         for i in labels:
             productordercount=Order.objects.filter(product=request.GET['productoption'],order_date=i).count()
             items.append(productordercount)
-            # print(i) 
 
     data={
         "labels":labels,
